@@ -175,7 +175,7 @@ def main():
         #PROTOCOLANDO INDISPONIBILIDADE
         desktop_bot.type_key('p')
         desktop_bot.wait(3000)
-
+        #PROCURANDO A ISENÇÃO 60
         janela_desconto = desktop_bot.find_app_window(title='Lista de tipos de desconto disponíveis')
         bt_rolarpaginaabaixo = desktop_bot.find_app_element(from_parent_window=janela_desconto,title='Uma página abaixo')
         desktop_bot.wait(1000)
