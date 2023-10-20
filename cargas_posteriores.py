@@ -54,116 +54,42 @@ def main():
     texto_email_vazio = f'Nenhuma ordem para a serventia foi encontrada'
 
     # ESTRUTURA DE REPETIÇÃO PARA COLETAR OS DADOS DO QUE FOI PROTOCOLADO E IMPRIMIR AS ORDENS
+
     while not desktop_bot.find('protocolo_vazio'):
+        bot_excel.read(r'D:\RPA\cnib\indisponibilidade\protocolos.xlsx')
+        listavazia = []
+        dados = bot_excel.as_list()
+
+        if dados == listavazia:
+            print('VAZIO')
+            print('ACHOU NUMERO DO PROTOCOLO LIVRO 1')
+            if not desktop_bot.find("campo_protocolo", matching=0.97, waiting_time=10000):
+                not_found("campo_protocolo")
+            desktop_bot.click_relative(27, 35)
+            desktop_bot.wait(500)
+            desktop_bot.type_keys(['ctrl', 'home'])
+            desktop_bot.wait(500)
+            desktop_bot.type_keys(['shift', 'end'])
+            desktop_bot.wait(500)
+            desktop_bot.control_c()
+            num_comunicado = desktop_bot.get_clipboard()
+            print('COPIADO NUMERO DO PROT CNIB')
+            desktop_bot.enter(wait=500, presses=8)
+            desktop_bot.control_c()
+            num_protocolo = desktop_bot.get_clipboard()
+            num_protocolo = str(num_protocolo)
+
+            
+        else:
+            print('NAO DEU')
 
         logging.info(rf'LENDO PLANILHA')
 
-        print('ACHOU NUMERO DO PROTOCOLO LIVRO 1')
-        if not desktop_bot.find("campo_protocolo", matching=0.97, waiting_time=10000):
-            not_found("campo_protocolo")
-        desktop_bot.click_relative(-20, 89)
-        desktop_bot.wait(500)
-        desktop_bot.type_keys(['ctrl', 'home'])
-        desktop_bot.wait(500)
-        desktop_bot.type_keys(['shift', 'end'])
-        desktop_bot.wait(500)
-        desktop_bot.control_c()
-        num_comunicado = desktop_bot.get_clipboard()
-        print('COPIADO NUMERO DO PROT CNIB')
-        desktop_bot.enter(wait=500, presses=8)
-        desktop_bot.control_c()
-        num_protocolo = desktop_bot.get_clipboard()
-        num_protocolo = str(num_protocolo)
-
-        planilha = BotExcelPlugin().read(r"C:\RPA\Indisponibilidade\protocolos.xlsx").set_nan_as(value='')
-        desktop_bot.wait(1000)
-        dados = planilha.as_list()
-
-        for index, dados in enumerate(dados):
-            print('entrou no for')
-            protocolo_planilha = dados[2]
-            protocolo_planilha = str(protocolo_planilha)
-            print(protocolo_planilha, num_protocolo)
-
-            if protocolo_planilha == num_protocolo:
-                print(f'PROTOCOLO IGUAL')
-                break
 
 
-            else:
-                print(f'PROCURANDO O PROXIMO DA PLANILHA')
-                if not desktop_bot.find("seta_avançar", matching=0.97, waiting_time=10000):
-                    not_found("seta_avançar")
-                desktop_bot.click()
-
-                if not desktop_bot.find('protocolo_vazio'):
-                    if not desktop_bot.find("campo_protocolo", matching=0.97, waiting_time=10000):
-                        not_found("campo_protocolo")
-                    desktop_bot.click_relative(27, 35)
-                    desktop_bot.enter(wait=500, presses=8)
-                    desktop_bot.control_c()
-                    num_protocolo = desktop_bot.get_clipboard()
-                    num_protocolo = str(num_protocolo)
-                    continue
-                else:
-                    break
-        print('nao entrou no for')
-        if protocolo_planilha != num_protocolo:
-            bot_excel.add_row([data3, num_comunicado, num_protocolo])
-        else:
-            pass
+    for index, dados in enumerate(dados):
 
 
-
-
-
-
-    print('VAI PARA ABA TABELA')
-    bot_excel.write('protocolos.xlsx')
-    '''
-    logging.info(rf'GRAVADO {num_comunicado} e {num_protocolo}')
-    desktop_bot.wait(1500)
-    if not desktop_bot.find("aba_tabela", matching=0.97, waiting_time=10000):
-        not_found("aba_tabela")
-    desktop_bot.click()
-    print('ABA TABELA')
-    desktop_bot.wait(1500)
-
-    if not desktop_bot.find("seta_selecao", matching=0.95, waiting_time=10000):
-        not_found("seta_selecao")
-    desktop_bot.right_click()
-    print('SETA SELECAO')
-    desktop_bot.wait(2000)
-    print('IMPRIMINDO A ORDEM')
-    desktop_bot.type_down()
-    desktop_bot.type_down()
-    desktop_bot.enter()
-    desktop_bot.tab()
-    desktop_bot.type_key('m')
-    desktop_bot.tab()
-    desktop_bot.wait(1000)
-    print(f'GERANDO PDF DA ORDEM {num_comunicado}')
-    desktop_bot.type_keys(['alt', 'i'])
-
-    desktop_bot.wait(1500)
-    # SALVANDO O ARQUIVO PDF DA FOLHA DE ROSTO
-    desktop_bot.paste(rf'\\safira\REGISTRO\CNIB\{data3}\{num_comunicado}')
-    desktop_bot.wait(2000)
-    desktop_bot.enter()
-    desktop_bot.wait(3000)
-    logging.info(rf'GERADO PDF {num_comunicado} e {num_protocolo}')
-    if not desktop_bot.find("aba_campos", matching=0.97, waiting_time=10000):
-        not_found("aba_campos")
-    desktop_bot.click()
-    print('CLIQUE ABA CAMPOS PARA RETORNAR')
-    desktop_bot.wait(2500)
-
-    if not desktop_bot.find("seta_avançar", matching=0.97, waiting_time=10000):
-        not_found("seta_avançar")
-    desktop_bot.click()
-    print('AVANÇADO')
-    desktop_bot.wait(1500)
-    '''
 
 
 def not_found(label):
